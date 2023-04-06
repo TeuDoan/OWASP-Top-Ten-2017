@@ -75,11 +75,11 @@ Ngoài ra, các ID ngẫu nhiên hoặc đã băm có thể được tìm thấy
 
 Ví dụ một trường hợp kiểm thử như sau, một API endpoint cho phép người dùng lấy chi tiết tin nhắn trực tiếp thông qua một ID đã băm. Request có dạng:
 ```http
-GET /api\_v1/messages?conversation_id=SOME_RANDOM_ID
+GET /api_v1/messages?conversation_id=SOME_RANDOM_ID
 ```
 Conversation\_id là một đoạn mã ngẫu nhiên dài, chứa cả chữ và số. Nhưng sau đó người kiểm thử phát hiện ra rằng có thể tìm được danh sách mọi tin nhắn của người dùng với ID của họ!
 ```http
-GET /api\_v1/messages?user_id=ANOTHER_USERS_ID
+GET /api_v1/messages?user_id=ANOTHER_USERS_ID
 ```
 Request này trả về 1 danh sách *conversation\_ids* mà người dùng có. Trong đó *user\_id*  của người dùng lại được công khai ở trang profile của người dùng tương ứng. Tức là chúng ta có thể đọc tin nhắn của bất kỳ người dùng nào sau khi có được user\_id của họ lấy từ trang profile công khai, rồi dùng user\_id đó để lấy danh sách conversation\_ids của họ, Cuối cùng yêu cầu xem tin nhắn thông qua API endpoint /api\_v1/messages!
 ### 3.2. Nếu không đoán được thì tự chế ra xem
