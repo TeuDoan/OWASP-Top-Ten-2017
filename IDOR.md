@@ -12,7 +12,7 @@ Có nhiều ví dụ về lỗ hổng kiểm soát truy cập mà trong đó m�
 
 Lấy ví dụ về một trang web sử dụng URL sau để truy cập vào trang cá nhân của khách hàng, từ back-end của cơ sở dữ liệu:
 ```
-https://insecure-website.com/customer\_account?customer\_number=132355
+https://insecure-website.com/customer_account?customer_number=132355
 ```
 ID của khách hafg được sử dụng trực tiếp làm mã truy vấn để lấy thông tin từ cở sở dữ liệu. Nếu không có một quá trình nào khác can thiệp, Hacker chỉ cần thay đổi giá trị customer\_number là sẽ có thể xem được thông tin của các khách hàng khác. Đây là một ví dụ về lỗ hổng IDOR dẫn đến leo thang đặc quyền theo chiều ngang. 
 
@@ -75,11 +75,11 @@ Ngoài ra, các ID ngẫu nhiên hoặc đã băm có thể được tìm thấy
 
 Ví dụ một trường hợp kiểm thử như sau, một API endpoint cho phép người dùng lấy chi tiết tin nhắn trực tiếp thông qua một ID đã băm. Request có dạng:
 ```http
-GET /api\_v1/messages?conversation\_id=SOME\_RANDOM\_ID
+GET /api\_v1/messages?conversation_id=SOME_RANDOM_ID
 ```
 Conversation\_id là một đoạn mã ngẫu nhiên dài, chứa cả chữ và số. Nhưng sau đó người kiểm thử phát hiện ra rằng có thể tìm được danh sách mọi tin nhắn của người dùng với ID của họ!
 ```http
-GET /api\_v1/messages?user\_id=ANOTHER\_USERS\_ID
+GET /api\_v1/messages?user_id=ANOTHER_USERS_ID
 ```
 Request này trả về 1 danh sách *conversation\_ids* mà người dùng có. Trong đó *user\_id*  của người dùng lại được công khai ở trang profile của người dùng tương ứng. Tức là chúng ta có thể đọc tin nhắn của bất kỳ người dùng nào sau khi có được user\_id của họ lấy từ trang profile công khai, rồi dùng user\_id đó để lấy danh sách conversation\_ids của họ, Cuối cùng yêu cầu xem tin nhắn thông qua API endpoint /api\_v1/messages!
 ### 3.2. Nếu không đoán được thì tự chế ra xem
@@ -89,30 +89,30 @@ Nếu request của ứng dụng không dùng ID nào cả, thì ta có thể th
 
 Ví dụ, nếu request này hiện tất cả tin nhắn của người dùng hiện tại:
 ```http
-GET /api\_v1/messages
+GET /api_v1/messages
 ```
-Vậy biết đâu khi thêm user\_id như dưới đây thì sẽ hiện tin nhắn của người dùng khác?
+Vậy biết đâu khi thêm user_id như dưới đây thì sẽ hiện tin nhắn của người dùng khác?
 ```http
-GET /api\_v1/messages?user\_id=ANOTHER\_USERS\_ID
+GET /api_v1/messages?user_id=ANOTHER_USERS_ID
 ```
 ### 3.4. HPP (HTTP parameter pollution)
 HPP vulnerabilities (gán nhiều giá trị cho cùng một tham số) cũng có thể dẫn tới IDOR. Nhiều ứng dụng sẽ không lường trước tình huống người dùng nhập nhiều giá trị cho cùng một tham số, do đó ta sẽ có khả năng bypass chương trình.
 
 Tuy nhiên trường hợp này khá là hiếm khi xảy ra, còn trên lý thuyết thì sẽ trông như thế này. Nếu như request này fail:
 ```http
-GET /api\_v1/messages?user\_id=ANOTHER\_USERS\_ID
+GET /api_v1/messages?user_id=ANOTHER_USERS_ID
 ```
 Thì ta thử:
 ```http
-GET /api\_v1/messages?user\_id=YOUR\_USER\_ID&user\_id=ANOTHER\_USERS\_ID
+GET /api_v1/messages?user_id=YOUR_USER_ID&user_id=ANOTHER_USERS_ID
 ```
 Hoặc là:
-```http
-GET /api\_v1/messages?user\_id=ANOTHER\_USERS\_ID&user\_id=YOUR\_USER\_ID
+```htt
+GET /api_v1/messages?user_id=ANOTHER_USERS_ID&user_id=YOUR_USER_ID
 ```
 Hoặc thay tham số thành dạng list:
 ```http
-GET /api\_v1/messages?user\_ids[]=YOUR\_USER\_ID&user\_ids[]=ANOTHER\_USERS\_ID
+GET /api_v1/messages?user_ids[]=YOUR_USER_ID&user_ids[]=ANOTHER_USERS_ID
 ```
 ### 3.5. Blind IDORs
 Đôi khi, các endpoint tương tác với IDOR không phản hồi trực tiếp với thông tin bị rò rỉ. Thay vào đó, chúng có thể khiến ứng dụng rò rỉ thông tin ở nơi khác: trong file xuất ra, email và thậm chí có thể là cảnh báo bằng văn bản.
