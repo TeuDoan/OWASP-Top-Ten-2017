@@ -78,7 +78,7 @@ Ví dụ một trường hợp kiểm thử như sau, một API endpoint cho ph�
 GET /api\_v1/messages?conversation\_id=SOME\_RANDOM\_ID
 ```
 Conversation\_id là một đoạn mã ngẫu nhiên dài, chứa cả chữ và số. Nhưng sau đó người kiểm thử phát hiện ra rằng có thể tìm được danh sách mọi tin nhắn của người dùng với ID của họ!
-```
+```http
 GET /api\_v1/messages?user\_id=ANOTHER\_USERS\_ID
 ```
 Request này trả về 1 danh sách *conversation\_ids* mà người dùng có. Trong đó *user\_id*  của người dùng lại được công khai ở trang profile của người dùng tương ứng. Tức là chúng ta có thể đọc tin nhắn của bất kỳ người dùng nào sau khi có được user\_id của họ lấy từ trang profile công khai, rồi dùng user\_id đó để lấy danh sách conversation\_ids của họ, Cuối cùng yêu cầu xem tin nhắn thông qua API endpoint /api\_v1/messages!
@@ -88,30 +88,30 @@ Nếu ID dùng để tham chiếu đối  tượng quá phức tạp, hãy thử
 Nếu request của ứng dụng không dùng ID nào cả, thì ta có thể thử tự thêm vào. Thử với các từ khó phổ biến như *id, user\_id, message\_id* hoặc các tham số tham chiếu đối tượng khác và quan sát xem chương trình có thay đổi gì hay không.
 
 Ví dụ, nếu request này hiện tất cả tin nhắn của người dùng hiện tại:
-```
+```http
 GET /api\_v1/messages
 ```
 Vậy biết đâu khi thêm user\_id như dưới đây thì sẽ hiện tin nhắn của người dùng khác?
-```
+```http
 GET /api\_v1/messages?user\_id=ANOTHER\_USERS\_ID
 ```
 ### 3.4. HPP (HTTP parameter pollution)
 HPP vulnerabilities (gán nhiều giá trị cho cùng một tham số) cũng có thể dẫn tới IDOR. Nhiều ứng dụng sẽ không lường trước tình huống người dùng nhập nhiều giá trị cho cùng một tham số, do đó ta sẽ có khả năng bypass chương trình.
 
 Tuy nhiên trường hợp này khá là hiếm khi xảy ra, còn trên lý thuyết thì sẽ trông như thế này. Nếu như request này fail:
-```
+```http
 GET /api\_v1/messages?user\_id=ANOTHER\_USERS\_ID
 ```
 Thì ta thử:
-```
+```http
 GET /api\_v1/messages?user\_id=YOUR\_USER\_ID&user\_id=ANOTHER\_USERS\_ID
 ```
 Hoặc là:
-```
+```http
 GET /api\_v1/messages?user\_id=ANOTHER\_USERS\_ID&user\_id=YOUR\_USER\_ID
 ```
 Hoặc thay tham số thành dạng list:
-```
+```http
 GET /api\_v1/messages?user\_ids[]=YOUR\_USER\_ID&user\_ids[]=ANOTHER\_USERS\_ID
 ```
 ### 3.5. Blind IDORs
